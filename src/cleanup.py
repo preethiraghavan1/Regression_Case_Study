@@ -115,20 +115,23 @@ def clean_replace_data_with_mode(df) :
     df1 = replace_given_values_With_Mode(df, empty_values)
     df1.to_csv(data_file_csv_Mode_location)
     return df1
-    
+
 
 def initial_cleaning(df):
     #Start Cleaning - Preethi
     #apply - low = 1, Medium = 2, High = 3
+    print "UsageBand and ProductSize columns"
     df['UsageBand'] = df['UsageBand'].apply(map_UsageBand_to_numbers)
     df['ProductSize'] = df['ProductSize'].apply(map_productSize_to_numbers)
 
     #numbers in inhes and feet to just decimal feet
+    print "other columns"
     df['Undercarriage_Pad_Width'] = df['Undercarriage_Pad_Width'].apply(inchesToNumber)
     df['Stick_Length'] = df['Stick_Length'].apply(inchesToNumber)
     df['Blade_Width'] = df['Blade_Width'].apply(inchesToNumber1)
     df['Tire_Size'] = df['Tire_Size'].apply(inchesToNumber1)
 
+    print "fiProductClassDesc columns"
     #fiProductClassDesc column to multiple type columns
     ser = df['fiProductClassDesc']
     ser = ser.apply(split_val)
@@ -138,24 +141,18 @@ def initial_cleaning(df):
 
     df = pd.merge(df, newdf, left_index = True, right_index = True)
     df = df.drop('fiProductClassDesc', axis = 1)
+    return df
     #End Cleaning - Preethi
 
 df = pd.read_csv(data_file_csv_location)
 dforig = df.copy()
 
-df = clean_replace_data_with_mode(df)
+print "initial cleaning"
+df = initial_cleaning(df)
+print "Replacing with mode"
 clean_replace_data_with_mode(df)
 
 #End - Preethi
-
-
-# def delete_rows_with_empty_values(df, values) :
-
-
-
-
-#delete rows which are empty
-
 
 
 df = pd.read_csv(data_file_location)
